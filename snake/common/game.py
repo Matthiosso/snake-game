@@ -68,13 +68,11 @@ class Game:
                     if not self.snake.move(direction.scaled_value(self.board.snake_block)):
                         game_close = True
 
-                self.board.draw(self.snake)
-                self.board.draw(self.food)
-                self.board.score(self.snake.size)
                 if self.snake.headx() == self.food.pos_x and self.snake.heady() == self.food.pos_y:
                     self.board.message('Yummy !', Color.BLUE)
                     self.snake.grow_up()
                     self.food = Food(self.board.width, self.board.height, self.board.snake_block)
+                self.draw()
                 pygame.display.update()
 
             clock.tick(self.board.snake_speed)
@@ -83,3 +81,8 @@ class Game:
 
         pygame.quit()
         quit()
+
+    def draw(self):
+        self.board.draw(self.snake)
+        self.board.draw(self.food)
+        self.board.score(self.snake.size)
