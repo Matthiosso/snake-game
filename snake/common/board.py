@@ -13,11 +13,16 @@ class Board:
         self.snake_speed = snake_speed
 
         self.board = pygame.display.set_mode((self.width, self.height))
-        self.font_style = pygame.font.SysFont(None, 30)
+        self.fontsize = 30
+        self.font_style = pygame.font.SysFont(None, self.fontsize)
 
     def message(self, msg, color):
         mesg = self.font_style.render(msg, True, color.value)
         self.board.blit(mesg, [0, 0])
+
+    def score(self, score):
+        mesg = self.font_style.render('Score: {}'.format(score), True, Color.RED.value)
+        self.board.blit(mesg, [0, self.height-self.fontsize])
 
     def fill_white(self):
         self.board.fill(Color.WHITE.value)

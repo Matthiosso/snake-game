@@ -69,6 +69,7 @@ class Game:
 
                 self.board.draw(self.snake)
                 self.board.draw(self.food)
+                self.board.score(self.snake.size)
                 if self.snake.headx() == self.food.pos_x and self.snake.heady() == self.food.pos_y:
                     self.board.message('Yummy !', Color.BLUE)
                     self.snake.grow_up()
