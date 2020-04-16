@@ -18,5 +18,10 @@ class Direction(enum.Enum):
         }
         return pygame_command_mapping.get(command, None)
 
+    @staticmethod
+    def kept_same_direction(old_dir, new_dir):
+        return (old_dir.value[0] != 0 and new_dir.value[0] != 0) or \
+               (old_dir.value[1] != 0 and new_dir.value[1] != 0)
+
     def scaled_value(self, scale):
         return tuple([scale*x for x in self.value])

@@ -17,7 +17,7 @@ class Game:
     def start(self):
         pygame.init()
         pygame.display.set_caption('Snake game by Matthiosso')
-        self.board = Board(800, 600, 10, 30)
+        self.board = Board(800, 600, 10, 10)
         self.snake = Snake(self.board.width/2, self.board.height/2)
         self.food = Food(self.board.width, self.board.height, self.board.snake_block)
 
@@ -52,7 +52,9 @@ class Game:
                         game_paused = not game_paused
                     elif not game_paused:
                         new_direction = Direction.from_pygame_command(event.key)
-                        if new_direction is not None:
+
+                        if new_direction is not None and \
+                                (direction is None or not Direction.kept_same_direction(direction, new_direction)):
                             direction = new_direction
             if not game_paused:
                 if self.snake.headx() >= self.board.width or self.snake.headx() < 0 \
@@ -62,7 +64,8 @@ class Game:
                 self.board.fill_white()
 
                 if direction is not None:
-                    self.snake.move(direction.scaled_value(self.board.snake_block))
+                    if not self.snake.move(direction.scaled_value(self.board.snake_block)):
+                        game_close = True
 
                 self.board.draw(self.snake)
                 self.board.draw(self.food)
