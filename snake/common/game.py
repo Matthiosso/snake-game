@@ -54,7 +54,8 @@ class Game:
                         new_direction = Direction.from_pygame_command(event.key)
 
                         if new_direction is not None and \
-                                (direction is None or not Direction.kept_same_direction(direction, new_direction)):
+                                (direction is None or self.snake.size < 2 or
+                                 not Direction.kept_same_direction(direction, new_direction)):
                             direction = new_direction
             if not game_paused:
                 if self.snake.headx() >= self.board.width or self.snake.headx() < 0 \
