@@ -23,15 +23,15 @@ class Game:
 
         game_over = False
         game_close = False
+        game_paused = False
         direction = None
 
         clock = pygame.time.Clock()
 
         while not game_over:
-
             while game_close:
                 self.board.fill_white()
-                self.board.message("You Lost! Press Q-Quit or C-Play Again", Color.RED)
+                self.board.message("You Lost (Score: {})! Press Q-Quit or C-Play Again".format(self.snake.size), Color.RED)
                 pygame.display.update()
 
                 for event in pygame.event.get():
@@ -41,26 +41,36 @@ class Game:
                             game_close = False
                         if event.key == pygame.K_c:
                             self.start()
+                    if event.type == pygame.QUIT:
+                        game_over = True
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     game_over = True
                 elif event.type == pygame.KEYDOWN:
-                    new_direction = Direction.from_pygame_command(event.key)
-                    if new_direction is not None:
-                        direction = new_direction
-            if self.snake.pos_x >= self.board.width or self.snake.pos_x < 0 \
-                    or self.snake.pos_y >= self.board.height or self.snake.pos_y < 0:
-                game_close = True
+                    if event.key == pygame.K_p:
+                        game_paused = not game_paused
+                    elif not game_paused:
+                        new_direction = Direction.from_pygame_command(event.key)
+                        if new_direction is not None:
+                            direction = new_direction
+            if not game_paused:
+                if self.snake.headx() >= self.board.width or self.snake.headx() < 0 \
+                        or self.snake.heady() >= self.board.height or self.snake.heady() < 0:
+                    game_close = True
 
-            self.move_snake(direction)
+                self.board.fill_white()
 
-            self.board.fill_white()
-            self.board.draw(Color.BLACK, self.snake)
-            self.board.draw(Color.BLUE, self.food)
-            if self.snake.pos_x == self.food.pos_x and self.snake.pos_y == self.food.pos_y:
-                self.board.message('Yummy !', Color.BLUE)
-            pygame.display.update()
+                if direction is not None:
+                    self.snake.move(direction.scaled_value(self.board.snake_block))
+
+                self.board.draw(self.snake)
+                self.board.draw(self.food)
+                if self.snake.headx() == self.food.pos_x and self.snake.heady() == self.food.pos_y:
+                    self.board.message('Yummy !', Color.BLUE)
+                    self.snake.grow_up()
+                    self.food = Food(self.board.width, self.board.height, self.board.snake_block)
+                pygame.display.update()
 
             clock.tick(self.board.snake_speed)
 
@@ -68,8 +78,3 @@ class Game:
 
         pygame.quit()
         quit()
-
-    def move_snake(self, direction):
-        if direction is not None:
-            self.snake.move(direction.scaled_value(self.board.snake_block))
-

@@ -1,6 +1,8 @@
 import pygame
 
 from snake.common.color import Color
+from snake.common.food import Food
+from snake.common.snake import Snake
 
 
 class Board:
@@ -11,18 +13,20 @@ class Board:
         self.snake_speed = snake_speed
 
         self.board = pygame.display.set_mode((self.width, self.height))
-        self.font_style = pygame.font.SysFont(None, 50)
+        self.font_style = pygame.font.SysFont(None, 30)
 
     def message(self, msg, color):
         mesg = self.font_style.render(msg, True, color.value)
-        self.board.blit(mesg, [self.width / 2, self.height / 2])
+        self.board.blit(mesg, [0, 0])
 
     def fill_white(self):
         self.board.fill(Color.WHITE.value)
 
-    def draw(self, color, snake):
-
-        pygame.draw.rect(self.board, color.value, [snake.pos_x,
-                                                   snake.pos_y,
-                                                   self.snake_block,
-                                                   self.snake_block])
+    def draw(self, obj):
+        if isinstance(obj, Snake):
+            for body_part in obj.body:
+                pygame.draw.rect(self.board, Color.GREEN.value, [body_part[0], body_part[1],
+                                                           self.snake_block, self.snake_block])
+        elif isinstance(obj, Food):
+            pygame.draw.rect(self.board, Color.BLUE.value, [obj.pos_x, obj.pos_y,
+                                                       self.snake_block, self.snake_block])
