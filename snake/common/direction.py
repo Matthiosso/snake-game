@@ -7,7 +7,6 @@ class Direction(enum.Enum):
     RIGHT = (1, 0)
     UP = (0, -1)
     DOWN = (0, 1)
-    NONE = (0, 0)
 
     @staticmethod
     def from_pygame_command(command):
@@ -17,8 +16,7 @@ class Direction(enum.Enum):
             pygame.K_UP: Direction.UP,
             pygame.K_DOWN: Direction.DOWN
         }
-        func = pygame_command_mapping.get(command, lambda: Direction.NONE)
-        return func
+        return pygame_command_mapping.get(command, None)
 
     def scaled_value(self, scale):
         return tuple([scale*x for x in self.value])
