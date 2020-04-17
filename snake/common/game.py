@@ -1,7 +1,7 @@
 import pygame
 from snake.common.board import Board
 from snake.utils.color import Color
-from snake.common.direction import Direction
+from snake.utils.direction import Direction
 from snake.common.food import Food
 from snake.common.snake import Snake
 
