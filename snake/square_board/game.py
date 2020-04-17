@@ -16,7 +16,7 @@ class SquareBoardGame:
         self.height = height
 
         self.margin = margin
-        self.score_band_height = 20
+        self.score_band_height = 30
 
         self.window_size = [self.cols*self.width + self.margin,
                             self.rows*self.height + self.margin + self.score_band_height]
@@ -24,6 +24,7 @@ class SquareBoardGame:
         self.clock_fps = clock_fps
 
         self.background_color = Color.BLACK.value
+        self.font_size = self.score_band_height
 
         self.grid = [[Color.WHITE.value for i in range(self.rows)]
                      for j in range(self.cols)]
@@ -35,12 +36,17 @@ class SquareBoardGame:
         pygame.init()
         pygame.display.set_caption('Snake game by Matthiosso')
         self.screen = pygame.display.set_mode(self.window_size)
+        self.font_style = pygame.font.SysFont(None, self.font_size)
 
         self.snake = Snake(int(self.cols/2), int(self.rows/2))
         self.food = Food(self.cols, self.rows)
         self.listen_events()
 
         self.end()
+
+    def update_score(self, score):
+        mesg = self.font_style.render('Score: {}'.format(score), True, Color.WHITE.value)
+        self.screen.blit(mesg, [0, self.rows*self.height + self.margin])
 
     def draw(self):
         self.screen.fill(self.background_color)
@@ -59,6 +65,7 @@ class SquareBoardGame:
                                                         self.height * self.food.pos_y + self.margin,
                                                         self.width-self.margin,
                                                         self.height-self.margin])
+        self.update_score(self.snake.size)
         pygame.display.update()
 
     def listen_events(self):
