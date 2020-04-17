@@ -14,13 +14,11 @@ class SquareBoardGame:
 
         self.margin = margin
 
-        self.window_size = [self.cols*self.width + self.margin, self.rows*self.height + self.margin]
+        self.window_size = [self.cols*self.width + self.margin, self.rows*self.height + self.margin + 50]
         self.screen = None
         self.clock_fps = clock_fps
 
-        self.color_active = Color.BLUE.value
-        self.color_inactive = Color.BLACK.value
-        self.active = False
+        self.background_color = Color.BLACK.value
 
         self.grid = [[Color.WHITE.value for i in range(self.rows)]
                      for j in range(self.cols)]
@@ -35,7 +33,7 @@ class SquareBoardGame:
         self.end()
 
     def draw(self):
-        self.screen.fill(self.color_active if self.active else self.color_inactive)
+        self.screen.fill(self.background_color)
         for col in range(len(self.grid)):
             for row in range(len(self.grid[col])):
                 pygame.draw.rect(self.screen, self.grid[col][row], [(self.width * col + self.margin),
@@ -55,7 +53,11 @@ class SquareBoardGame:
                     if event.key == pygame.K_q:
                         game_over = True
                     if event.key == pygame.K_x:
-                        self.active = not self.active
+                        # Ici: En cliquant sur X on change la couleur du tableau
+                        new_color = Color.get_random_value()
+                        while new_color == Color.WHITE.value or new_color == self.background_color:
+                            new_color = Color.get_random_value()
+                        self.background_color = new_color
             clock.tick(self.clock_fps)
             self.draw()
 
