@@ -38,15 +38,14 @@ class SquareBoardGame:
         self.screen = pygame.display.set_mode(self.window_size)
         self.font_style = pygame.font.SysFont(None, self.font_size)
 
-        self.snake = Snake(int(self.cols/2), int(self.rows/2))
-        self.food = Food(self.cols, self.rows)
-        self.listen_events()
+        self.reset_game()
+        self.play()
 
         self.end()
 
-    def update_score(self, score):
-        mesg = self.font_style.render('Score: {}'.format(score), True, Color.WHITE.value)
-        self.screen.blit(mesg, [0, self.rows*self.height + self.margin])
+    def reset_game(self):
+        self.snake = Snake(int(self.cols / 2), int(self.rows / 2))
+        self.food = Food(self.cols, self.rows)
 
     def draw(self):
         self.screen.fill(self.background_color)
@@ -65,17 +64,37 @@ class SquareBoardGame:
                                                         self.height * self.food.pos_y + self.margin,
                                                         self.width-self.margin,
                                                         self.height-self.margin])
-        self.update_score(self.snake.size)
+        self.message('Score: {}'.format(self.snake.size))
         pygame.display.update()
 
-    def listen_events(self):
+    def message(self, message):
+        mesg = self.font_style.render('{}'.format(message), True, Color.WHITE.value)
+        self.screen.blit(mesg, [0, self.rows * self.height + self.margin])
+
+    def play(self):
         game_over = False
+        game_close = False
         direction = None
         clock = pygame.time.Clock()
         while not game_over:
+            while game_close:
+                self.screen.fill(Color.BLACK.value)
+                self.message("You Lost (Score: {})! Press Q-Quit or C-Play Again".format(self.snake.size))
+                pygame.display.update()
+
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            return self.end()
+                        if event.key == pygame.K_c:
+                            self.reset_game()
+                            game_close = False
+                            direction = None
+                    if event.type == pygame.QUIT:
+                        return self.end()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    game_over = True
+                    return self.end()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         game_over = True
@@ -93,9 +112,10 @@ class SquareBoardGame:
                             direction = new_direction
             if self.snake.headx() >= self.cols or self.snake.headx() < 0 \
                     or self.snake.heady() >= self.rows or self.snake.heady() < 0:
-                game_over = True
+                game_close = True
             if direction is not None:
-                self.snake.move(direction.value)
+                if not self.snake.move(direction.value):
+                    game_close = True
             if self.snake.headx() == self.food.pos_x and self.snake.heady() == self.food.pos_y:
                 self.snake.grow_up()
                 self.food = Food(self.cols, self.rows)
