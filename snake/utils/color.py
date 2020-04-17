@@ -1,4 +1,5 @@
 import enum
+import random
 
 
 class Color(enum.Enum):
@@ -8,3 +9,7 @@ class Color(enum.Enum):
     YELLOW = (255, 255, 102)
     BLUE = (0, 0, 255)
     WHITE = (255, 255, 255)
+
+    @staticmethod
+    def get_random_value():
+        return random.choice(list(Color)).value

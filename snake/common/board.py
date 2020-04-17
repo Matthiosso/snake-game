@@ -1,6 +1,6 @@
 import pygame
 
-from snake.common.color import Color
+from snake.utils.color import Color
 from snake.common.food import Food
 from snake.common.snake import Snake
 

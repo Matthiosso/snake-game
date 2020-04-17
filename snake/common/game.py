@@ -1,6 +1,6 @@
 import pygame
 from snake.common.board import Board
-from snake.common.color import Color
+from snake.utils.color import Color
 from snake.common.direction import Direction
 from snake.common.food import Food
 from snake.common.snake import Snake
@@ -31,7 +31,8 @@ class Game:
         while not game_over:
             while game_close:
                 self.board.fill_white()
-                self.board.message("You Lost (Score: {})! Press Q-Quit or C-Play Again".format(self.snake.size), Color.RED)
+                self.board.message("You Lost (Score: {})! Press Q-Quit or C-Play Again".format(self.snake.size),
+                                   Color.RED)
                 pygame.display.update()
 
                 for event in pygame.event.get():
