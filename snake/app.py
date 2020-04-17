@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from snake.square_board.game import SquareBoardGame
+from snake.game.game import Game
 
 
 def run():
-    game = SquareBoardGame()
+    game = Game()
     game.start()
     print('Jeu lancé')

@@ -1,6 +1,6 @@
 import pytest
 
-from snake.common.game import Game
+from snake.game.game import Game
 
 
 @pytest.fixture

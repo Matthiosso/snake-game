@@ -1,13 +1,13 @@
 import pygame
 
-from snake.square_board.items.snake import Snake
-from snake.square_board.items.food import Food
+from snake.game.items.snake import Snake
+from snake.game.items.food import Food
 from snake.utils.color import Color
 from snake.utils.direction import Direction
 
 
-class SquareBoardGame:
-    def __init__(self, rows=20, cols=25, width=30, height=30, margin=3, clock_fps=10):
+class Game:
+    def __init__(self, rows=20, cols=20, width=40, height=40, margin=3, clock_fps=10):
 
         self.cols = cols
         self.rows = rows
