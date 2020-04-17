@@ -16,8 +16,10 @@ class SquareBoardGame:
         self.height = height
 
         self.margin = margin
+        self.score_band_height = 20
 
-        self.window_size = [self.cols*self.width + 20, self.rows*self.height + 20]
+        self.window_size = [self.cols*self.width + self.margin,
+                            self.rows*self.height + self.margin + self.score_band_height]
         self.screen = None
         self.clock_fps = clock_fps
 
@@ -90,8 +92,16 @@ class SquareBoardGame:
             if self.snake.headx() == self.food.pos_x and self.snake.heady() == self.food.pos_y:
                 self.snake.grow_up()
                 self.food = Food(self.cols, self.rows)
+                while self.snake_and_food_collapse():
+                    self.food = Food(self.cols, self.rows)
             clock.tick(self.clock_fps)
             self.draw()
 
     def end(self):
         pygame.quit()
+
+    def snake_and_food_collapse(self):
+        for snake_part in self.snake.body:
+            if snake_part[0] == self.food.pos_x and snake_part[1] == self.food.pos_y:
+                return True
+        return False
